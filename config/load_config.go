@@ -3,10 +3,11 @@ package config
 import (
 	"fmt"
 	"github.com/widuu/goini"
+	// "runtime"
 )
 
 const (
-	config_file = "/Users/lixiumeng/go/src/lgocommon/config/config.ini"
+	config_file = "/Users/lixiumeng/go/src/Sephiroth/config/config.ini"
 )
 
 // ini配置解析器

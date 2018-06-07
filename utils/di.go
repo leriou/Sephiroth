@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"github.com/go-redis/redis"
 	"github.com/olivere/elastic"
-	"lgocommon/config"
+	"Sephiroth/config"
 	"gopkg.in/mgo.v2"
 	"time"
 )
