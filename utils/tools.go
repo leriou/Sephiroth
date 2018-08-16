@@ -42,7 +42,7 @@ func (t *Tool) CheckIDCard(no string) bool {
 				t, _ := strconv.Atoi(n)
 				sum += t * factor[i]
 			}
-			return mapFactor[sum%MOD_FACTOR] == str[VALID_LEN] 	
+			return mapFactor[sum % MOD_FACTOR] == str[VALID_LEN] 	
 		}
 	}else if len(str) == MIN_LEN { // 针对15位的
 		reg, _ := regexp.Compile("^([1-8][0-9]{5})[0-9]{2}([01][0-9][0-3][0-9])[0-9]{3}$")
@@ -74,14 +74,24 @@ func (t *Tool) AnalyzeIDCard(no string) map[string]string {
 	return res
 }
 
+/**
+ * 获取时间
+ */
 func (t *Tool) GetTime() string{
 	return time.Now().Format("2006-01-02 15:04:05")
 }
 
+/**
+ *
+ * 获取时间戳
+ */
 func (t *Tool) GetTimeStamp() int64{
 	return time.Now().UnixNano()
 }
 
+/**
+ * 打印日志
+ */ 
 func (t *Tool) Logging(level,msg string){
 	fmt.Println(t.GetTime() + " ["+ level +"]: " + msg)
 }
