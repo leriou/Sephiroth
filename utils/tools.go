@@ -23,8 +23,8 @@ const (
 )
 
 func (t *Tool) Regex(pattern, str string) []string {
-	reg,_ := regexp.Compile(pattern)
-	return reg.FindAllString(str,10)
+	reg, _ := regexp.Compile(pattern)
+	return reg.FindAllString(str, 10)
 }
 
 // 检查身份证号是否符合规则
@@ -42,12 +42,12 @@ func (t *Tool) CheckIDCard(no string) bool {
 				t, _ := strconv.Atoi(n)
 				sum += t * factor[i]
 			}
-			return mapFactor[sum % MOD_FACTOR] == str[VALID_LEN] 	
+			return mapFactor[sum%MOD_FACTOR] == str[VALID_LEN]
 		}
-	}else if len(str) == MIN_LEN { // 针对15位的
+	} else if len(str) == MIN_LEN { // 针对15位的
 		reg, _ := regexp.Compile("^([1-8][0-9]{5})[0-9]{2}([01][0-9][0-3][0-9])[0-9]{3}$")
 		return reg.MatchString(no)
-	} 
+	}
 	return false
 }
 
@@ -61,13 +61,13 @@ func (t *Tool) AnalyzeIDCard(no string) map[string]string {
 			i, _ := strconv.Atoi(noArray[MAX_LEN-2])
 			res["gender"] = strconv.Itoa(i % 2)
 		} else if len(noArray) == MIN_LEN {
-			res["birthday"] = "19"+strings.Join(noArray[6:12], "")
+			res["birthday"] = "19" + strings.Join(noArray[6:12], "")
 			i, _ := strconv.Atoi(noArray[MIN_LEN-1])
 			res["gender"] = strconv.Itoa(i % 2)
 		}
 		res["address"] = strings.Join(noArray[0:6], "")
 		res["error"] = "0"
-		
+
 	} else {
 		res["error"] = "1"
 	}
@@ -77,7 +77,7 @@ func (t *Tool) AnalyzeIDCard(no string) map[string]string {
 /**
  * 获取时间
  */
-func (t *Tool) GetTime() string{
+func (t *Tool) GetTime() string {
 	return time.Now().Format("2006-01-02 15:04:05")
 }
 
@@ -85,13 +85,13 @@ func (t *Tool) GetTime() string{
  *
  * 获取时间戳
  */
-func (t *Tool) GetTimeStamp() int64{
+func (t *Tool) GetTimeStamp() int64 {
 	return time.Now().UnixNano()
 }
 
 /**
  * 打印日志
- */ 
-func (t *Tool) Logging(level,msg string){
-	fmt.Println(t.GetTime() + " ["+ level +"]: " + msg)
+ */
+func (t *Tool) Logging(level, msg string) {
+	fmt.Println(t.GetTime() + " [" + level + "]: " + msg)
 }
