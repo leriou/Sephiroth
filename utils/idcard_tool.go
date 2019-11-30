@@ -1,18 +1,16 @@
 package utils
 
 import (
-	"fmt"
 	"regexp"
 	"strconv"
 	"strings"
-	"time"
 )
 
-type Tool struct {
+type IDCardTool struct {
 }
 
-func NewTool() *Tool {
-	return new(Tool)
+func NewTool() *IDCardTool {
+	return new(IDCardTool)
 }
 
 const (
@@ -22,13 +20,8 @@ const (
 	VALID_LEN  = 17
 )
 
-func (t *Tool) Regex(pattern, str string) []string {
-	reg,_ := regexp.Compile(pattern)
-	return reg.FindAllString(str,10)
-}
-
 // 检查身份证号是否符合规则
-func (t *Tool) CheckIDCard(no string) bool {
+func (t *IDCardTool) CheckIDCard(no string) bool {
 	str := strings.Split(no, "")
 	if len(str) == MAX_LEN { // 针对18位的
 		pattern := "^([1-8][0-9]{5})([12][0-9])[0-9]{2}([01][0-9][0-3][0-9])[0-9]{3}([0-9X])$" // 检查基本正则
@@ -42,17 +35,17 @@ func (t *Tool) CheckIDCard(no string) bool {
 				t, _ := strconv.Atoi(n)
 				sum += t * factor[i]
 			}
-			return mapFactor[sum % MOD_FACTOR] == str[VALID_LEN] 	
+			return mapFactor[sum%MOD_FACTOR] == str[VALID_LEN]
 		}
-	}else if len(str) == MIN_LEN { // 针对15位的
+	} else if len(str) == MIN_LEN { // 针对15位的
 		reg, _ := regexp.Compile("^([1-8][0-9]{5})[0-9]{2}([01][0-9][0-3][0-9])[0-9]{3}$")
 		return reg.MatchString(no)
-	} 
+	}
 	return false
 }
 
 // 根据身份证号分析户籍住址,出生日期,性别
-func (t *Tool) AnalyzeIDCard(no string) map[string]string {
+func (t *IDCardTool) AnalyzeIDCard(no string) map[string]string {
 	res := make(map[string]string)
 	if t.CheckIDCard(no) {
 		noArray := strings.Split(no, "")
@@ -61,37 +54,15 @@ func (t *Tool) AnalyzeIDCard(no string) map[string]string {
 			i, _ := strconv.Atoi(noArray[MAX_LEN-2])
 			res["gender"] = strconv.Itoa(i % 2)
 		} else if len(noArray) == MIN_LEN {
-			res["birthday"] = "19"+strings.Join(noArray[6:12], "")
+			res["birthday"] = "19" + strings.Join(noArray[6:12], "")
 			i, _ := strconv.Atoi(noArray[MIN_LEN-1])
 			res["gender"] = strconv.Itoa(i % 2)
 		}
 		res["address"] = strings.Join(noArray[0:6], "")
 		res["error"] = "0"
-		
+
 	} else {
 		res["error"] = "1"
 	}
 	return res
-}
-
-/**
- * 获取时间
- */
-func (t *Tool) GetTime() string{
-	return time.Now().Format("2006-01-02 15:04:05")
-}
-
-/**
- *
- * 获取时间戳
- */
-func (t *Tool) GetTimeStamp() int64{
-	return time.Now().UnixNano()
-}
-
-/**
- * 打印日志
- */ 
-func (t *Tool) Logging(level,msg string){
-	fmt.Println(t.GetTime() + " ["+ level +"]: " + msg)
 }

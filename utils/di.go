@@ -2,19 +2,23 @@ package utils
 
 import (
 	"fmt"
+	"sephiroth/config"
+	"sync"
+	"time"
+
 	"github.com/go-redis/redis"
 	"github.com/olivere/elastic"
-	"Sephiroth/config"
 	"gopkg.in/mgo.v2"
-	"time"
 )
 
 var (
+	di     *Di
 	rdsCli *redis.Client
 	mgoCli *mgo.Session
 	esCli  *elastic.Client
 	start  int64
 	end    int64
+	once   sync.Once
 )
 
 // 依赖注入
@@ -23,50 +27,41 @@ type Di struct {
 }
 
 func NewDi() *Di {
-	di := new(Di)
-	di.Config = di.GetConfig()
+	once.Do(func() {
+		di := new(Di)
+		di.Config = di.GetConfig()
+	})
 	return di
 }
 
 func (di *Di) GetConfig() []map[string]map[string]string {
-	if di.Config != nil {
-		return di.Config
-	}
 	return config.NewConfigParser().GetConfig()
 }
 
 func (di *Di) GetRedis() *redis.Client {
-	if rdsCli != nil {
-		return rdsCli
+	if rdsCli == nil {
+		rdsConf := di.Config[1]["redis"]
+		rdsConfig := &redis.Options{
+			Addr:     rdsConf["host"] + ":" + rdsConf["port"],
+			Password: "",
+			DB:       0,
+		}
+		rdsCli = redis.NewClient(rdsConfig)
 	}
-	rdsConf := di.Config[1]["redis"]
-	rdsConfig := &redis.Options{
-		Addr:     rdsConf["host"] + ":" + rdsConf["port"],
-		Password: "", // no password set
-		DB:       0,  // use default DB
-	}
-	rdsCli := redis.NewClient(rdsConfig)
 	return rdsCli
 }
 
 func (di *Di) GetMongoDB() *mgo.Session {
-	if mgoCli != nil {
-		return mgoCli
-	}
-	mgoConf := di.Config[2]["mongodb"]
-	url := mgoConf["host"] + ":" + mgoConf["port"]
-	mgoCli, err := mgo.Dial(url)
-	if err != nil {
-		fmt.Println(err)
+	if mgoCli == nil {
+		mgoCli, _ = mgo.Dial("localhost:27017")
 	}
 	return mgoCli
 }
 
 func (di *Di) GetElastic() *elastic.Client {
-	if esCli != nil {
-		return esCli
+	if esCli == nil {
+		esCli, _ = elastic.NewClient()
 	}
-	esCli, _ := elastic.NewClient()
 	return esCli
 }
 

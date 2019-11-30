@@ -2,12 +2,12 @@ package config
 
 import (
 	"fmt"
+
 	"github.com/widuu/goini"
-	// "runtime"
 )
 
 const (
-	config_file = "/Users/lixiumeng/go/src/Sephiroth/config/config.ini"
+	config_file = "/Users/lixiumeng/go/src/sephiroth/config/config.ini"
 )
 
 // ini配置解析器
