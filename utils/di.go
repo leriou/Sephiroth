@@ -35,38 +35,33 @@ func NewDi() *Di {
 }
 
 func (di *Di) GetConfig() []map[string]map[string]string {
-	once.Do(func() {
-		di.Config = config.NewConfigParser().GetConfig()
-	})
-	return di.Config
+	return config.NewConfigParser().GetConfig()
 }
 
 func (di *Di) GetRedis() *redis.Client {
-	once.Do(func() {
+	if rdsCli == nil {
 		rdsConf := di.Config[1]["redis"]
 		rdsConfig := &redis.Options{
 			Addr:     rdsConf["host"] + ":" + rdsConf["port"],
-			Password: "", // no password set
-			DB:       0,  // use default DB
+			Password: "",
+			DB:       0,
 		}
 		rdsCli = redis.NewClient(rdsConfig)
-	})
+	}
 	return rdsCli
 }
 
 func (di *Di) GetMongoDB() *mgo.Session {
-	once.Do(func() {
-		mgoConf := di.Config[2]["mongodb"]
-		url := mgoConf["host"] + ":" + mgoConf["port"]
-		mgoCli, _ = mgo.Dial(url)
-	})
+	if mgoCli == nil {
+		mgoCli, _ = mgo.Dial("localhost:27017")
+	}
 	return mgoCli
 }
 
 func (di *Di) GetElastic() *elastic.Client {
-	once.Do(func() {
+	if esCli == nil {
 		esCli, _ = elastic.NewClient()
-	})
+	}
 	return esCli
 }
 
