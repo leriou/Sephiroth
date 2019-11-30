@@ -2,13 +2,16 @@ package utils
 
 import (
 	"fmt"
-	"time"
 )
 
-type Logging struct{
-
+type Logging struct {
+	t *TimeUtil
 }
 
-func NewLogging() *Logging{
+func NewLogging() *Logging {
 	return new(Logging)
+}
+
+func (l *Logging) log(level, info string) {
+	fmt.Println("%s [%s] -> %s", l.t.GetTime(), level, info)
 }

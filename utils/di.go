@@ -1,13 +1,14 @@
 package utils
 
 import (
-	"Sephiroth/config"
 	"fmt"
+	"sephiroth/config"
+	"sync"
+	"time"
+
 	"github.com/go-redis/redis"
 	"github.com/olivere/elastic"
 	"gopkg.in/mgo.v2"
-	"sync"
-	"time"
 )
 
 var (

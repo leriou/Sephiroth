@@ -1,18 +1,16 @@
 package utils
 
 import (
-	"fmt"
 	"regexp"
 	"strconv"
 	"strings"
-	"time"
 )
 
-type Tool struct {
+type IDCardTool struct {
 }
 
-func NewTool() *Tool {
-	return new(Tool)
+func NewTool() *IDCardTool {
+	return new(IDCardTool)
 }
 
 const (
@@ -22,13 +20,13 @@ const (
 	VALID_LEN  = 17
 )
 
-func (t *Tool) Regex(pattern, str string) []string {
+func (t *IDCardTool) Regex(pattern, str string) []string {
 	reg, _ := regexp.Compile(pattern)
 	return reg.FindAllString(str, 10)
 }
 
 // 检查身份证号是否符合规则
-func (t *Tool) CheckIDCard(no string) bool {
+func (t *IDCardTool) CheckIDCard(no string) bool {
 	str := strings.Split(no, "")
 	if len(str) == MAX_LEN { // 针对18位的
 		pattern := "^([1-8][0-9]{5})([12][0-9])[0-9]{2}([01][0-9][0-3][0-9])[0-9]{3}([0-9X])$" // 检查基本正则
@@ -52,7 +50,7 @@ func (t *Tool) CheckIDCard(no string) bool {
 }
 
 // 根据身份证号分析户籍住址,出生日期,性别
-func (t *Tool) AnalyzeIDCard(no string) map[string]string {
+func (t *IDCardTool) AnalyzeIDCard(no string) map[string]string {
 	res := make(map[string]string)
 	if t.CheckIDCard(no) {
 		noArray := strings.Split(no, "")
@@ -72,26 +70,4 @@ func (t *Tool) AnalyzeIDCard(no string) map[string]string {
 		res["error"] = "1"
 	}
 	return res
-}
-
-/**
- * 获取时间
- */
-func (t *Tool) GetTime() string {
-	return time.Now().Format("2006-01-02 15:04:05")
-}
-
-/**
- *
- * 获取时间戳
- */
-func (t *Tool) GetTimeStamp() int64 {
-	return time.Now().UnixNano()
-}
-
-/**
- * 打印日志
- */
-func (t *Tool) Logging(level, msg string) {
-	fmt.Println(t.GetTime() + " [" + level + "]: " + msg)
 }
