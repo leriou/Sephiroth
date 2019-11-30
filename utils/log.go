@@ -4,14 +4,14 @@ import (
 	"fmt"
 )
 
-type Logging struct {
+type Logger struct {
 	t *TimeUtil
 }
 
-func NewLogging() *Logging {
-	return new(Logging)
+func NewLogger() *Logger {
+	return new(Logger)
 }
 
-func (l *Logging) log(level, info string) {
+func (l *Logger) Log(level, info string) {
 	fmt.Println("%s [%s] -> %s", l.t.GetTime(), level, info)
 }

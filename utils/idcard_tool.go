@@ -20,11 +20,6 @@ const (
 	VALID_LEN  = 17
 )
 
-func (t *IDCardTool) Regex(pattern, str string) []string {
-	reg, _ := regexp.Compile(pattern)
-	return reg.FindAllString(str, 10)
-}
-
 // 检查身份证号是否符合规则
 func (t *IDCardTool) CheckIDCard(no string) bool {
 	str := strings.Split(no, "")

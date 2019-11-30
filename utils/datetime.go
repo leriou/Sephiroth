@@ -5,6 +5,10 @@ import "time"
 type TimeUtil struct {
 }
 
+func NewTimeUtil() *TimeUtil {
+	return new(TimeUtil)
+}
+
 /**
  * 获取时间
  */
